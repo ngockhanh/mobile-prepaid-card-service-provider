@@ -27,9 +27,7 @@ paths:
         '200':
           description: Success
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/OrderResponse'
+            $ref: '#/definitions/OrderResponse'
         default:
           description: Error Occured
           schema:
@@ -44,13 +42,32 @@ paths:
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/RequestId'
         - $ref: '#/parameters/OrderId'
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/OrderItemResponse'
+            $ref: '#/definitions/OrderResponse'
+        default:
+          description: Error Occured
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  '/order/{id}/status':
+    x-swagger-router-controller: Get order item status by order id
+    get:
+      description: Check order status by order id 
+      operationId: getOrderItemStatus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/OrderId'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/OrderStatusResponse'
         default:
           description: Error Occured
           schema:
@@ -126,6 +143,23 @@ definitions:
         type: array
         items:
             $ref: '#/definitions/OrderItemResponse'
+  OrderStatusResponse:
+    required:
+      - request_id
+      - order_id
+      - status
+    properties:
+      request_id:
+        type: string
+        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
+        description: The request id
+      order_id:
+        type: string
+        example: c9d7c073-2634-4350-bc67-eea10c43a64b
+        description: The reference id as known as order id
+      status:
+        type: string
+        example: SUCCESS|PENDING|FAIL
   OrderItemResponse:
     properties:
       opcode:

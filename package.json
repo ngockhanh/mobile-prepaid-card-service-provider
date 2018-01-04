@@ -1,0 +1,64 @@
+{
+  "name": "mobile-prepaid-card-service-provider",
+  "description": "",
+  "version": "1.0.0",
+  "author": "Cuong, Duong Dinh <dinhcuong@ononpay.com>",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/cuongquay/mobile-prepaid-card-service-provider.git"
+  },
+  "bugs": "http://github.com/cuongquay/mobile-prepaid-card-service-provider/issues",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "cassandra-driver": "^3.3.0",
+    "dateformat": "3.0.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.0.0",
+    "guid": "^0.0.12",
+    "kafka-node": "^2.2.3",
+    "loopback": "^3.16.2",
+    "loopback-connector-soap": "^4.0.1",
+    "md5": "^2.2.1",
+    "nexmo": "^2.0.2",
+    "node-ses": "^2.0.5",
+    "nodemailer": "^4.3.1",
+    "otp.js": "^1.1.0",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2",
+    "sanitize-html": "^1.15.0",
+    "sendmail": "^1.2.0",
+    "swagger-ui-express": "^2.0.9",
+    "swaggerize-express": "^4.0.0",
+    "swagmock": "~0.0.2",
+    "timestamp-log": "^1.0.0",
+    "unidecode": "^0.1.8",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^2",
+    "istanbul": "~0.4.3",
+    "is-my-json-valid": "^2.13.1",
+    "js-yaml": "^3.2.6",
+    "supertest": "^1.2.0",
+    "swagger-parser": "^3.4.1",
+    "base32-encode": "^0.1.0",
+    "tape": "^4"
+  },
+  "scripts": {
+    "test": "tape 'tests/**/*.js'",
+    "cover": "istanbul cover tape -- 'tests/**/*.js'",
+    "lint": "eslint .",
+    "prestart": "node_modules/yamljs/bin/yaml2json config/swagger.yaml > config/swagger.json",
+    "recreate-data": "yo swaggerize:data --framework express --dataPath models --handlerPath controllers --apiPath config/swagger.yaml",
+    "recreate-handler": "yo swaggerize:handler --framework express --dataPath models --handlerPath controllers --apiPath config/swagger.yaml",
+    "recreate-test": "yo swaggerize:test --framework express --dataPath models --handlerPath controllers --apiPath config/swagger.yaml"
+  },
+  "generator-swaggerize": {
+    "version": "3.1.0"
+  },
+  "main": "./server"
+}
