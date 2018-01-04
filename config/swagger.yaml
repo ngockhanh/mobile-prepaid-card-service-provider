@@ -12,62 +12,68 @@ consumes:
 produces:
   - application/json
 paths:
-  /order:
-    x-swagger-router-controller: Create new topup order
+  '/order':
+    x-swagger-router-controller: Create new mobile prepaid order
     post:
-      description: Create a prepaid order
+      description: Create a mobile prepaid order
       operationId: createOrder
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/CreateOrderParameters'
+        - $ref: '#/parameters/OrderParameters'
       responses:
         '200':
           description: Success
           schema:
             type: array
             items:
-              $ref: '#/definitions/CreateOrderResponse'
+              $ref: '#/definitions/OrderResponse'
         default:
           description: Error Occured
           schema:
             $ref: '#/definitions/ErrorResponse'
-  /order/status:
-    x-swagger-router-controller: Check order info by transaction id
+  '/order/{id}':
+    x-swagger-router-controller: Get order item by order id
     get:
-      description: Check order info by transaction id
-      operationId: checkOrderStatus
+      description: Check order info by order id 
+      operationId: getOrderItem
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/CheckTransParameters'
+        - $ref: '#/parameters/RequestId'
+        - $ref: '#/parameters/OrderId'
       responses:
         '200':
           description: Success
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/checkTransResponse'
+            $ref: '#/definitions/OrderItemResponse'
         default:
           description: Error Occured
           schema:
             $ref: '#/definitions/ErrorResponse'
 parameters:
-  CreateOrderParameters:
+  RequestId:
+    name: request_id
+    in: query
+    type: string
+    description: The request id to create an oder.
+    required: true
+  OrderId:
+    name: id
+    in: path
+    type: string
+    description: The order id to receive the order item.
+    required: true
+  OrderParameters:
     name: body
     in: body
     description: The parameters for creating new order
     schema:
       $ref: '#/definitions/OrdersRequest'
-  CheckTransParameters:
-    in: query
-    name: request_id
-    description: The request id
-    type: string
 definitions:
   OrdersRequest:
     required:
@@ -98,9 +104,10 @@ definitions:
         type: string
         example: VTT
         description: The network operation code such as VTT|VNP|VNN|VMS
-  CreateOrderResponse:
+  OrderResponse:
     required:
       - request_id
+      - order_id
       - status
       - items
     properties:
@@ -108,30 +115,25 @@ definitions:
         type: string
         example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
         description: The request id
+      order_id:
+        type: string
+        example: c9d7c073-2634-4350-bc67-eea10c43a64b
+        description: The reference id as known as order id
       status:
         type: string
         example: SUCCESS|PENDING|FAIL
       items:
         type: array
         items:
-            $ref: '#/definitions/OrderResponseItem'
-  OrderResponseItem:
+            $ref: '#/definitions/OrderItemResponse'
+  OrderItemResponse:
     properties:
+      opcode:
+        type: string
+        example: VTT
       code:
         type: string
-        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
-      status:
-        type: string
-        example: SUCCESS|PENDING|FAIL
-        description: The code which reflect to request status
-  checkTransResponse:
-    required:
-      - request_id
-      - status
-    properties:
-      request_id:
-        type: string
-        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
+        example: 6af6b3fe090e4ae4
       status:
         type: string
         example: SUCCESS|PENDING|FAIL
