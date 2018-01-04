@@ -12,7 +12,7 @@ consumes:
 produces:
   - application/json
 paths:
-  '/order':
+  /order:
     x-swagger-router-controller: Create new mobile prepaid order
     post:
       description: Create a mobile prepaid order
@@ -35,7 +35,7 @@ paths:
   '/order/{id}':
     x-swagger-router-controller: Get order item by order id
     get:
-      description: Check order info by order id 
+      description: Check order info by order id
       operationId: getOrderItem
       consumes:
         - application/json
@@ -55,7 +55,7 @@ paths:
   '/order/{id}/status':
     x-swagger-router-controller: Get order item status by order id
     get:
-      description: Check order status by order id 
+      description: Check order status by order id
       operationId: getOrderItemStatus
       consumes:
         - application/json
@@ -68,6 +68,26 @@ paths:
           description: Success
           schema:
             $ref: '#/definitions/OrderStatusResponse'
+        default:
+          description: Error Occured
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /provider/inquiry:
+    x-swagger-router-controller: Count number of cards
+    get:
+      description: Count number of cards in store
+      operationId: countCards
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/CountCardParameters'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/CountCardResponse'
         default:
           description: Error Occured
           schema:
@@ -91,6 +111,12 @@ parameters:
     description: The parameters for creating new order
     schema:
       $ref: '#/definitions/OrdersRequest'
+  CountCardParameters:
+    name: query
+    in: body
+    description: The parameters for counting number of cards
+    schema:
+      $ref: '#/definitions/CountCardRequest'
 definitions:
   OrdersRequest:
     required:
@@ -106,6 +132,28 @@ definitions:
         type: integer
         example: 1000
         description: The number of inquired cards
+      amount:
+        type: integer
+        example: 100000
+        description: The price unit per card
+        enum:
+          - 10000
+          - 20000
+          - 50000
+          - 100000
+          - 200000
+          - 500000
+      opcode:
+        type: string
+        example: VTT
+        description: The network operation code such as VTT|VNP|VNN|VMS
+  CountCardRequest:
+    required:
+      - request_id
+    properties:
+      request_id:
+        type: string
+        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
       amount:
         type: integer
         example: 100000
@@ -139,10 +187,15 @@ definitions:
       status:
         type: string
         example: SUCCESS|PENDING|FAIL
+        description: The code which reflect to request status
       items:
         type: array
         items:
-            $ref: '#/definitions/OrderItemResponse'
+          $ref: '#/definitions/OrderItemResponse'
+      message:
+        type: string
+        example: Unknow Error
+        description: The message reflect to status if status is FAIL
   OrderStatusResponse:
     required:
       - request_id
@@ -160,6 +213,10 @@ definitions:
       status:
         type: string
         example: SUCCESS|PENDING|FAIL
+      message:
+        type: string
+        example: Unknow Error
+        description: The message reflect to status if status is FAIL
   OrderItemResponse:
     properties:
       opcode:
@@ -168,10 +225,53 @@ definitions:
       code:
         type: string
         example: 6af6b3fe090e4ae4
-      status:
+      amount:
+        type: integer
+        example: 100000
+      serial:
         type: string
-        example: SUCCESS|PENDING|FAIL
-        description: The code which reflect to request status
+        example: 53835832354
+      expire:
+        type: string
+        example: '2050-12-17 00:00:00'
+  CountCardResponse:
+    required:
+      - request_id
+      - order_id
+      - amount
+      - quantity
+      - opcode
+    properties:
+      request_id:
+        type: string
+        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
+      order_id:
+        type: string
+        example: c9d7c073-2634-4350-bc67-eea10c43a64b
+        description: The reference id as known as order id
+      quantity:
+        type: integer
+        example: 1000
+        description: The number of inquired cards``
+      amount:
+        type: integer
+        example: 100000
+        description: The price unit per card
+        enum:
+          - 10000
+          - 20000
+          - 50000
+          - 100000
+          - 200000
+          - 500000
+      opcode:
+        type: string
+        example: VTT
+        description: The network operation code such as VTT|VNP|VNN|VMS
+      message:
+        type: string
+        example: Unknow Error
+        description: The message reflect to status if status is FAIL
   ErrorResponse:
     required:
       - status
