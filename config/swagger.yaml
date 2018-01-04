@@ -1,0 +1,147 @@
+swagger: '2.0'
+info:
+  version: 0.0.1
+  title: mobile-prepaid-card-service-provider
+host: 'localhost:8000'
+basePath: /
+schemes:
+  - http
+  - https
+consumes:
+  - application/json
+produces:
+  - application/json
+paths:
+  /order:
+    x-swagger-router-controller: Create new topup order
+    post:
+      description: Create a prepaid order
+      operationId: createOrder
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/CreateOrderParameters'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/CreateOrderResponse'
+        default:
+          description: Error Occured
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+  /order/status:
+    x-swagger-router-controller: Check order info by transaction id
+    get:
+      description: Check order info by transaction id
+      operationId: checkOrderStatus
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/CheckTransParameters'
+      responses:
+        '200':
+          description: Success
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/checkTransResponse'
+        default:
+          description: Error Occured
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+parameters:
+  CreateOrderParameters:
+    name: body
+    in: body
+    description: The parameters for creating new order
+    schema:
+      $ref: '#/definitions/OrdersRequest'
+  CheckTransParameters:
+    in: query
+    name: request_id
+    description: The request id
+    type: string
+definitions:
+  OrdersRequest:
+    required:
+      - request_id
+      - quantity
+      - amount
+      - opcode
+    properties:
+      request_id:
+        type: string
+        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
+      quantity:
+        type: integer
+        example: 1000
+        description: The number of inquired cards
+      amount:
+        type: integer
+        example: 100000
+        description: The price unit per card
+        enum:
+          - 10000
+          - 20000
+          - 50000
+          - 100000
+          - 200000
+          - 500000
+      opcode:
+        type: string
+        example: VTT
+        description: The network operation code such as VTT|VNP|VNN|VMS
+  CreateOrderResponse:
+    required:
+      - request_id
+      - status
+      - items
+    properties:
+      request_id:
+        type: string
+        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
+        description: The request id
+      status:
+        type: string
+        example: SUCCESS|PENDING|FAIL
+      items:
+        type: array
+        items:
+            $ref: '#/definitions/OrderResponseItem'
+  OrderResponseItem:
+    properties:
+      code:
+        type: string
+        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
+      status:
+        type: string
+        example: SUCCESS|PENDING|FAIL
+        description: The code which reflect to request status
+  checkTransResponse:
+    required:
+      - request_id
+      - status
+    properties:
+      request_id:
+        type: string
+        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
+      status:
+        type: string
+        example: SUCCESS|PENDING|FAIL
+        description: The code which reflect to request status
+  ErrorResponse:
+    required:
+      - status
+    properties:
+      status:
+        type: string
+        example: SUCCESS|PENDING|FAIL
+      message:
+        type: string
