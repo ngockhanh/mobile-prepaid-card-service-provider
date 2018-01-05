@@ -1,12 +1,12 @@
 'use strict';
 var Mockgen = require('../mockgen.js');
 /**
- * Operations on /order/{id}
+ * Operations on /orders/{id}
  */
 module.exports = {
     /**
      * summary: 
-     * description: Check order info by order id
+     * description: Get an order tracking details of a specified order. It will return all the information about the requested order.
      * parameters: id
      * produces: application/json
      * responses: 200, default
@@ -19,7 +19,7 @@ module.exports = {
              * Replace this by actual data for the api.
              */
             Mockgen().responses({
-                path: '/order/{id}',
+                path: '/orders/{id}',
                 operation: 'get',
                 response: '200'
             }, callback);
@@ -30,7 +30,7 @@ module.exports = {
              * Replace this by actual data for the api.
              */
             Mockgen().responses({
-                path: '/order/{id}',
+                path: '/orders/{id}',
                 operation: 'get',
                 response: 'default'
             }, callback);

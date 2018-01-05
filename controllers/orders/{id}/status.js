@@ -1,17 +1,17 @@
 'use strict';
-var dataProvider = require('../../models/order/{id}.js');
+var dataProvider = require('../../../models/orders/{id}/status.js');
 /**
- * Operations on /order/{id}
+ * Operations on /orders/{id}/status
  */
 module.exports = {
     /**
      * summary: 
-     * description: Check order info by order id
+     * description: Get an order tracking status of a specified order. It will return all the information about the requested order.
      * parameters: id
      * produces: application/json
      * responses: 200, default
      */
-    get: function getOrderItem(req, res, next) {
+    get: function getOrderItemStatus(req, res, next) {
         /**
          * Get the data for response 200
          * For response `default` status 200 is used.

@@ -1,26 +1,26 @@
 'use strict';
 var Mockgen = require('./mockgen.js');
 /**
- * Operations on /order
+ * Operations on /orders
  */
 module.exports = {
     /**
      * summary: 
-     * description: Create a mobile prepaid order
-     * parameters: body
+     * description: Order a batch of mobile prepaid codes from system with a specific amount, quantity and network operation code.
+     * parameters: request_id, quantity, amount, opcode
      * produces: application/json
      * responses: 200, default
-     * operationId: createOrder
+     * operationId: GetItemsOrders
      */
-    post: {
+    get: {
         200: function (req, res, callback) {
             /**
              * Using mock data generator module.
              * Replace this by actual data for the api.
              */
             Mockgen().responses({
-                path: '/order',
-                operation: 'post',
+                path: '/orders',
+                operation: 'get',
                 response: '200'
             }, callback);
         },
@@ -30,8 +30,8 @@ module.exports = {
              * Replace this by actual data for the api.
              */
             Mockgen().responses({
-                path: '/order',
-                operation: 'post',
+                path: '/orders',
+                operation: 'get',
                 response: 'default'
             }, callback);
         }
