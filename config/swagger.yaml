@@ -34,7 +34,7 @@ paths:
           description: Error Occured
           schema:
             $ref: '#/definitions/ErrorResponse'
-  '/order/{id}':
+  '/order/:id':
     x-swagger-router-controller: Get order item by order id
     get:
       description: Check order info by order id 
