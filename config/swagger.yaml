@@ -30,9 +30,7 @@ paths:
         '200':
           description: Success
           schema:
-            type: array
-            items:
-              $ref: '#/definitions/OrdersResponse'
+            $ref: '#/definitions/OrdersResponse'
         default:
           description: Error Occured
           schema:
@@ -52,7 +50,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/OrderItemResponse'
+            $ref: '#/definitions/OrdersResponse'
         default:
           description: Error Occured
           schema:
@@ -77,6 +75,27 @@ paths:
           description: Error Occured
           schema:
             $ref: '#/definitions/ErrorResponse'
+  '/provider/inquiry':
+    x-swagger-router-controller: ProviderInquiry
+    get:
+      description: Get provider's inventory stock cards in store
+      operationId: countCards
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/OpCode'
+        - $ref: '#/parameters/Amount'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ProviderInquiryResponse'
+        default:
+          description: Error Occured
+          schema:
+            $ref: '#/definitions/ErrorResponse'
 parameters:
   RequestId:
     name: request_id
@@ -94,6 +113,7 @@ parameters:
     name: quantity
     in: query
     type: integer
+    maximum: 1000
     description: The number of items in an order.
     required: true
   Amount:
@@ -134,11 +154,11 @@ definitions:
         description: The reference id as known as order id
       status:
         type: string
-        example: SUCCESS|PENDING|FAIL
+        example: SUCCESS|PENDING|FAILED
       items:
         type: array
         items:
-            $ref: '#/definitions/OrderItemResponse'
+            $ref: '#/definitions/OrdersItemResponse'
   OrdersStatusResponse:
     required:
       - request_id
@@ -155,8 +175,8 @@ definitions:
         description: The reference id as known as order id
       status:
         type: string
-        example: SUCCESS|PENDING|FAIL
-  OrderItemResponse:
+        example: SUCCESS|PENDING|FAILED
+  OrdersItemResponse:
     properties:
       opcode:
         type: string
@@ -164,16 +184,55 @@ definitions:
       code:
         type: string
         example: 6af6b3fe090e4ae4
-      status:
+      amount:
+        type: integer
+        example: 100000
+      serial:
         type: string
-        example: SUCCESS|PENDING|FAIL
-        description: The code which reflect to request status
+        example: 53835832354
+      expire:
+        type: string
+        example: '2050-12-17 00:00:00'
+  ProviderInquiryResponse:
+    required:
+      - request_id
+      - order_id
+      - amount
+      - quantity
+      - opcode
+    properties:
+      request_id:
+        type: string
+        example: 6af6b3fe-090e-4ae4-9f26-ab2f07b13994
+      order_id:
+        type: string
+        example: c9d7c073-2634-4350-bc67-eea10c43a64b
+        description: The reference id as known as order id
+      quantity:
+        type: integer
+        example: 1000
+        description: The number of inquired cards``
+      amount:
+        type: integer
+        example: 100000
+        description: The price unit per card
+        enum:
+          - 10000
+          - 20000
+          - 50000
+          - 100000
+          - 200000
+          - 500000
+      opcode:
+        type: string
+        example: VTT
+        description: The network operation code such as VTT|VNP|VNN|VMS
   ErrorResponse:
     required:
       - status
     properties:
       status:
         type: string
-        example: SUCCESS|PENDING|FAIL
+        example: SUCCESS|PENDING|FAILED
       message:
         type: string

@@ -1,0 +1,45 @@
+{
+  "name": "mobile-prepaid-card-service-provider",
+  "description": "",
+  "version": "1.0.0",
+  "author": "OnOnPay <ngockhanh@ononpay.com>",
+  "contributors": [],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ononpay/mobile-prepaid-card-service-provider.git"
+  },
+  "bugs": "http://github.com/ononpay/mobile-prepaid-card-service-provider/issues",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
+  },
+  "dependencies": {
+    "aws-sdk": "2.176.0",
+    "body-parser": "^1.15.0",
+    "express": "^4.0.0",
+    "swagger-ui-express": "2.0.13",
+    "swaggerize-express": "^4.0.0",
+    "swagmock": "~0.0.2",
+    "yamljs": "0.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^2",
+    "istanbul": "~0.4.3",
+    "is-my-json-valid": "^2.13.1",
+    "js-yaml": "^3.2.6",
+    "supertest": "^1.2.0",
+    "swagger-parser": "^3.4.1",
+    "tape": "^4"
+  },
+  "scripts": {
+    "test": "tape 'tests/**/*.js'",
+    "cover": "istanbul cover tape -- 'tests/**/*.js'",
+    "lint": "eslint .",
+    "regenerate": "yo swaggerize:test --framework express --apiPath './config/swagger.yaml'",
+    "regenerate-data": "yo swaggerize:data --framework express --dataPath models --handlerPath controllers --apiPath config/swagger.yaml",
+    "regenerate-handler": "yo swaggerize:handler --framework express --dataPath models --handlerPath controllers --apiPath config/swagger.yaml"
+  },
+  "generator-swaggerize": {
+    "version": "3.1.0"
+  },
+  "main": "./server"
+}
