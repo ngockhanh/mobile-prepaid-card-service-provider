@@ -1,5 +1,5 @@
 'use strict';
-var Mockgen = require('../../mockgen.js');
+var publisher = require('../../../connectors/publisher');
 /**
  * Operations on /order/{id}/status
  */
@@ -18,22 +18,13 @@ module.exports = {
              * Using mock data generator module.
              * Replace this by actual data for the api.
              */
-            Mockgen().responses({
-                path: '/order/{id}/status',
-                operation: 'get',
-                response: '200'
-            }, callback);
+            publisher.getOrderItemStatus(req.params.id, callback);
         },
         default: function (req, res, callback) {
-            /**
-             * Using mock data generator module.
-             * Replace this by actual data for the api.
-             */
-            Mockgen().responses({
-                path: '/order/{id}/status',
-                operation: 'get',
-                response: 'default'
-            }, callback);
+            callback({
+                'code': 'error-input-parameters',
+                'message': 'Input parameters are wrong or missing.'
+            });
         }
     }
 };

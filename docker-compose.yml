@@ -11,10 +11,18 @@ services:
     build:
       context: ./
     environment:
-      - CARD_SERVICE_ENABLED=YES
+      - PREPAID_CARD_SERVICE_PROVIDER_ENABLED=YES
       - LOG_LEVEL=debug
-      - KAFKA_QUEUE_ENABLED=NO
-      - CARD_SERVICE_PROVIDER=VNPTEPAY
+      - PREPAID_CARD_SERVICE_PROVIDER=VNPTEPAY
+      - PREPAID_CARD_SERVICE_PROVIDER_URL=http://itopup-test.megapay.net.vn:8086/CDV_Partner_Services/services/Interfaces?wsdl
+      - PREPAID_CARD_SERVICE_PROVIDER_SECURE_PRIVATE_KEY=vnpt_epay_private_key.pem
+      - PREPAID_CARD_SERVICE_PROVIDER_PARTNER_NAME=partnerTest_PHP
+      - PREPAID_CARD_SERVICE_PROVIDER_PARTNER_PASSWORD=123456abc
+      - PREPAID_CARD_SERVICE_PROVIDER_KEY_SOFPIN=123456abc
+      - AWS_ACCESS_KEY_ID=
+      - AWS_SECRET_ACCESS_KEY=
+      - DYNAMODB_REGION_CODE=ap-southeast-1
+      - DYNAMODB_TABLE_NAME=mobile-prepaid-service-tracker
     ports:
      - 8100:8000
     healthcheck:

@@ -1,5 +1,5 @@
 'use strict';
-var Mockgen = require('../mockgen.js');
+var publisher = require('../../connectors/publisher');
 /**
  * Operations on /provider/inquiry
  */
@@ -18,22 +18,13 @@ module.exports = {
              * Using mock data generator module.
              * Replace this by actual data for the api.
              */
-            Mockgen().responses({
-                path: '/provider/inquiry',
-                operation: 'get',
-                response: '200'
-            }, callback);
+            publisher.inquiryProvider(req.query.request_id, req.query.opcode, req.query.amount, callback);
         },
         default: function (req, res, callback) {
-            /**
-             * Using mock data generator module.
-             * Replace this by actual data for the api.
-             */
-            Mockgen().responses({
-                path: '/provider/inquiry',
-                operation: 'get',
-                response: 'default'
-            }, callback);
+            callback({
+                'code': 'error-input-parameters',
+                'message': 'Input parameters are wrong or missing.'
+            });
         }
     }
 };
