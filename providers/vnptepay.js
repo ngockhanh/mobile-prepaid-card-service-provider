@@ -119,7 +119,7 @@ var sendRequestCreatingOrder = function (requestId, opcode, amount, quantity, ca
                         callback(null, {
                             request_id: requestId,
                             status: status,
-                            items: listCards['$value'] ? getListCards(listCards['$value']) : null,
+                            items: listCards['$value'] ? getListCards(listCards['$value']) : [],
                             message: message
                         });
 

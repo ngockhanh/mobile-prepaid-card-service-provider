@@ -6,8 +6,8 @@ var dataProvider = require('../../models/provider/inquiry.js');
 module.exports = {
     /**
      * summary: 
-     * description: Count number of cards in store
-     * parameters: query
+     * description: Get provider&#39;s inventory stock cards in store
+     * parameters: opcode, amount
      * produces: application/json
      * responses: 200, default
      */

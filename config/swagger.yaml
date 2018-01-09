@@ -12,30 +12,37 @@ consumes:
 produces:
   - application/json
 paths:
-  /order:
-    x-swagger-router-controller: Create new mobile prepaid order
-    post:
-      description: Create a mobile prepaid order
-      operationId: createOrder
+  /orders:
+    x-swagger-router-controller: OrdersController
+    get:
+      description: >-
+        Order a batch of mobile prepaid codes from system with a specific
+        amount, quantity and network operation code.
+      operationId: GetItemsOrders
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/OrderParameters'
+        - $ref: '#/parameters/RequestId'
+        - $ref: '#/parameters/Quantity'
+        - $ref: '#/parameters/Amount'
+        - $ref: '#/parameters/OpCode'
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/OrderResponse'
+            $ref: '#/definitions/OrdersResponse'
         default:
           description: Error Occured
           schema:
             $ref: '#/definitions/ErrorResponse'
-  '/order/{id}':
-    x-swagger-router-controller: Get order item by order id
+  '/orders/{id}':
+    x-swagger-router-controller: OrderController
     get:
-      description: Check order info by order id
+      description: >-
+        Get an order tracking details of a specified order. It will return all
+        the information about the requested order.
       operationId: getOrderItem
       consumes:
         - application/json
@@ -47,15 +54,17 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/OrderResponse'
+            $ref: '#/definitions/OrdersResponse'
         default:
           description: Error Occured
           schema:
             $ref: '#/definitions/ErrorResponse'
-  '/order/{id}/status':
-    x-swagger-router-controller: Get order item status by order id
+  '/orders/{id}/status':
+    x-swagger-router-controller: OrderController
     get:
-      description: Check order status by order id
+      description: >-
+        Get an order tracking status of a specified order. It will return all
+        the information about the requested order.
       operationId: getOrderItemStatus
       consumes:
         - application/json
@@ -67,27 +76,28 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/OrderStatusResponse'
+            $ref: '#/definitions/OrdersStatusResponse'
         default:
           description: Error Occured
           schema:
             $ref: '#/definitions/ErrorResponse'
   /provider/inquiry:
-    x-swagger-router-controller: Count number of cards
+    x-swagger-router-controller: ProviderInquiry
     get:
-      description: Count number of cards in store
+      description: Get provider's inventory stock cards in store
       operationId: countCards
       consumes:
         - application/json
       produces:
         - application/json
       parameters:
-        - $ref: '#/parameters/CountCardParameters'
+        - $ref: '#/parameters/OpCode'
+        - $ref: '#/parameters/Amount'
       responses:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/CountCardResponse'
+            $ref: '#/definitions/ProviderInquiryResponse'
         default:
           description: Error Occured
           schema:
@@ -105,71 +115,35 @@ parameters:
     type: string
     description: The order id to receive the order item.
     required: true
-  OrderParameters:
-    name: body
-    in: body
-    description: The parameters for creating new order
-    schema:
-      $ref: '#/definitions/OrdersRequest'
-  CountCardParameters:
-    name: query
-    in: body
-    description: The parameters for counting number of cards
-    schema:
-      $ref: '#/definitions/CountCardRequest'
+  Quantity:
+    name: quantity
+    in: query
+    type: integer
+    maximum: 1000
+    description: The number of items in an order.
+    required: true
+  Amount:
+    name: amount
+    in: query
+    type: integer
+    default: 10000
+    description: The amount of each item in an order.
+    required: true
+    enum:
+      - 10000
+      - 20000
+      - 50000
+      - 100000
+      - 200000
+      - 500000
+  OpCode:
+    name: opcode
+    in: query
+    type: string
+    description: The short code of network operation in an order such as VTT|VNP|VNN|VMS.
+    required: true
 definitions:
-  OrdersRequest:
-    required:
-      - request_id
-      - quantity
-      - amount
-      - opcode
-    properties:
-      request_id:
-        type: string
-        example: 434c9cb53bcf4e8e9b03ccdc18884c4d
-      quantity:
-        type: integer
-        example: 1000
-        description: The number of inquired cards
-      amount:
-        type: integer
-        example: 100000
-        description: The price unit per card
-        enum:
-          - 10000
-          - 20000
-          - 50000
-          - 100000
-          - 200000
-          - 500000
-      opcode:
-        type: string
-        example: VTT
-        description: The network operation code such as VTT|VNP|VNN|VMS
-  CountCardRequest:
-    required:
-      - request_id
-    properties:
-      request_id:
-        type: string
-        example: 434c9cb53bcf4e8e9b03ccdc18884c4d
-      amount:
-        type: integer
-        example: 100000
-        description: The price unit per card
-        enum:
-          - 10000
-          - 20000
-          - 50000
-          - 100000
-          - 200000
-          - 500000
-      opcode:
-        type: string
-        example: VTT
-        description: The network operation code such as VTT|VNP|VNN|VMS
-  OrderResponse:
+  OrdersResponse:
     required:
       - request_id
       - order_id
@@ -196,7 +170,7 @@ definitions:
         type: string
         example: Unknow Error
         description: The message reflect to status if status is FAILED
-  OrderStatusResponse:
+  OrdersStatusResponse:
     required:
       - request_id
       - order_id
@@ -234,7 +208,7 @@ definitions:
       expire:
         type: string
         example: '2050-12-17 00:00:00'
-  CountCardResponse:
+  ProviderInquiryResponse:
     required:
       - request_id
       - order_id

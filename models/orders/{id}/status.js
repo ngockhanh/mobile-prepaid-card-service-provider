@@ -1,24 +1,24 @@
 'use strict';
-var publisher = require('../connectors/publisher');
+var publisher = require('../../../connectors/publisher');
 /**
- * Operations on /order
+ * Operations on /orders/{id}/status
  */
 module.exports = {
     /**
      * summary: 
-     * description: Create a mobile prepaid order
-     * parameters: body
+     * description: Get an order tracking status of a specified order. It will return all the information about the requested order.
+     * parameters: id
      * produces: application/json
      * responses: 200, default
-     * operationId: createOrder
+     * operationId: getOrderItemStatus
      */
-    post: {
-        200: function (req, res, callback) {
+    get: {
+        '200': function (req, res, callback) {
             /**
              * Using mock data generator module.
              * Replace this by actual data for the api.
              */
-            publisher.createOrder(req.body.request_id, req.body.opcode, req.body.amount, req.body.quantity, callback);
+            publisher.getOrderItemStatus(req.params.id, callback);
         },
         default: function (req, res, callback) {
             callback({

@@ -12,6 +12,17 @@ AWS.config.update({
 
 const docClient = new AWS.DynamoDB.DocumentClient();
 
+var removeEmptyStringElements = function (obj) {
+    for (var prop in obj) {
+        if (typeof obj[prop] === 'object') {// dive deeper in
+            removeEmptyStringElements(obj[prop]);
+        } else if(obj[prop] === '' || obj[prop] === null) {// delete elements that are empty strings
+            delete obj[prop];
+        }
+    }
+    return obj;
+};
+
 module.exports = {
     createItem: function (requestId, opcode, amount, quantity, action, callback) {
         var id = uuid4();
@@ -32,6 +43,8 @@ module.exports = {
                 updated_at: dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss')
             }
         };
+
+        params = removeEmptyStringElements(params);
 
         log.debug('DYNAMODB add new item', 'START', id);
 
@@ -60,6 +73,8 @@ module.exports = {
                 ':updated_at': dateformat(new Date(), 'yyyy-mm-dd HH:MM:ss')
             };
         var updateQuery = '';
+
+        payload = removeEmptyStringElements(payload);
 
         var payloadKeys = Object.keys(payload);
 

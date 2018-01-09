@@ -36,11 +36,15 @@ module.exports = {
                     } else {
                         log.debug('sendRequest', 'FINISHED', data);
 
-                        database.updateItem(orderId,{
+                        var payload = {
                             status: data.status,
-                            items: JSON.stringify(data.items),
                             message: data.message.toString()
-                        });
+                        };
+
+                        if (data.items.length > 0) {
+                            payload['items'] = JSON.stringify(data.items);
+                        }
+                        database.updateItem(orderId, payload);
 
                         callback(null, {
                             request_id: requestId,
