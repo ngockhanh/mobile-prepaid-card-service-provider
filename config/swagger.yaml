@@ -14,6 +14,31 @@ produces:
 paths:
   /orders:
     x-swagger-router-controller: OrdersController
+    post:
+      description: >-
+        Import a batch of mobile prepaid codes into store.
+      operationId: ImportItemsOrders
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - $ref: '#/parameters/AppId'
+        - name: body
+          in: body
+          description: The object description of the list of mobile prepaid cards.
+          required: true
+          schema:
+            $ref: '#/definitions/ImportItemsOrdersRequest'
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ImportOrdersResponse'
+        default:
+          description: Error Occured
+          schema:
+            $ref: '#/definitions/ErrorResponse'
     get:
       description: >-
         Order a batch of mobile prepaid codes from system with a specific
@@ -24,6 +49,7 @@ paths:
       produces:
         - application/json
       parameters:
+        - $ref: '#/parameters/AppId'
         - $ref: '#/parameters/RequestId'
         - $ref: '#/parameters/Quantity'
         - $ref: '#/parameters/Amount'
@@ -54,7 +80,7 @@ paths:
         '200':
           description: Success
           schema:
-            $ref: '#/definitions/OrdersResponse'
+            $ref: '#/definitions/OrderResponse'
         default:
           description: Error Occured
           schema:
@@ -102,7 +128,13 @@ paths:
           description: Error Occured
           schema:
             $ref: '#/definitions/ErrorResponse'
+
 parameters:
+  AppId:
+    name: app_id
+    in: header
+    type: string
+    description: The app identifier which is using services.
   RequestId:
     name: request_id
     in: query
@@ -166,6 +198,49 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/OrderItemResponse'
+      message:
+        type: string
+        example: Unknow Error
+        description: The message reflect to status if status is FAILED
+  OrderResponse:
+    required:
+      - request_id
+      - order_id
+      - status
+      - opcode
+      - amount
+      - quantity
+      - app_id
+      - action
+    properties:
+      request_id:
+        type: string
+        example: 434c9cb53bcf4e8e9b03ccdc18884c4d
+        description: The request id
+      order_id:
+        type: string
+        example: 434c9cb53bcf4e8e9b03ccdc18884c4d
+        description: The reference id as known as order id
+      status:
+        type: string
+        example: SUCCESS|PENDING|FAILED
+        description: The code which reflect to request status
+      opcode:
+        type: string
+        example: VTT
+      amount:
+        type: integer
+        example: 500000
+      quantity:
+        type: integer
+        example: 200
+      app_id:
+        type: string
+        example: FLASH|DAILY
+        description: The app identifier which was requested order.
+      action:
+        type: string
+        example: INSERT_CARDS|DOWNLOAD_CARDS|COUNT_CARDS
       message:
         type: string
         example: Unknow Error
@@ -246,6 +321,34 @@ definitions:
         type: string
         example: Unknow Error
         description: The message reflect to status if status is FAILED
+  ImportItemsOrdersRequest:
+    required:
+      - request_id
+      - items
+    properties:
+      request_id:
+        $ref: '#/parameters/RequestId'
+      items:
+        type: array
+        items:
+          $ref: '#/definitions/OrderItemResponse'
+  ImportOrdersResponse:
+    required:
+      - request_id
+      - order_id
+      - status
+    properties:
+      request_id:
+        type: string
+        example: 434c9cb53bcf4e8e9b03ccdc18884c4d
+      order_id:
+        type: string
+        example: 434c9cb53bcf4e8e9b03ccdc18884c4d
+      status:
+        type: string
+        example: SUCCESS|PENDING|FAILED
+      message:
+        type: string
   ErrorResponse:
     required:
       - code
